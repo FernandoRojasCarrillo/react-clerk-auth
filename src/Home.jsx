@@ -1,19 +1,17 @@
 import styles from "./Home.module.css";
 import { UserButton } from "@clerk/clerk-react";
 import { useAuth } from "@clerk/clerk-react";
+import useAxiosInstance from "./hooks/useAxiosInstance";
 
 export function Home() {
   const { getToken } = useAuth();
+  const axiosInstance = useAxiosInstance();
 
   const fetchDataFromBackend = async () => {
     try {
       const token = await getToken();
-      const response = await fetch("http://localhost:3001/protected", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
+      const { data } = await axiosInstance.get("/protected");
+
       console.log("data ", data);
       console.log("token ", token);
     } catch (error) {
